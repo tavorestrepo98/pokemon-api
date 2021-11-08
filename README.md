@@ -1,4 +1,4 @@
-#Pokemon api
+# Pokemon api
 
 Api de consulta de batallas entre dos pokemones, esta api está hecha con nodejs, express y typescript
 
