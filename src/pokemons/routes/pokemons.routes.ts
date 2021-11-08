@@ -9,8 +9,8 @@ import { getPokemons } from '../controllers/pokemons.controller';
 export const pokemonsRouter = Router();
 
 pokemonsRouter.get('/battle', [
-    query('pokemon1', 'el id del pokemon 1 es obligatorio').not().isEmpty(),
-    query('pokemon2', 'el id del pokemon 2 es obligatorio').not().isEmpty(),
+    query('pokemon1', 'el nombre del pokemon 1 es obligatorio').not().isEmpty(),
+    query('pokemon2', 'el nombre del pokemon 2 es obligatorio').not().isEmpty(),
     query('pokemon1').custom(pokemonExist),
     query('pokemon2').custom(pokemonExist),
     validarCampos

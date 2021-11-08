@@ -23,10 +23,10 @@ export class PokemonService {
     }
 
 
-    async getTypes(urls: string[]): Promise<TypePokemon[]>{
+    async getTypes(names: string[]): Promise<TypePokemon[]>{
 
-        const peticionesHttp = urls.map(url => {
-            return axios.get<TypePokemon>(url);
+        const peticionesHttp = names.map(name => {
+            return http.get<TypePokemon>(`/type/${name}`);
         });
 
         const resp: AxiosResponse<TypePokemon, any>[] = await Promise.all(peticionesHttp);

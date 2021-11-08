@@ -41,16 +41,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.pokemonExist = void 0;
 var http_common_1 = __importDefault(require("../../config/http-common"));
-var pokemonExist = function (id) { return __awaiter(void 0, void 0, void 0, function () {
+var pokemonExist = function (nombre) { return __awaiter(void 0, void 0, void 0, function () {
     var respuesta, pokemon;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, http_common_1.default.get("/pokemon/" + id)];
+            case 0: return [4 /*yield*/, http_common_1.default.get("/pokemon/" + nombre)];
             case 1:
                 respuesta = _a.sent();
                 pokemon = respuesta.data;
                 if (!pokemon) {
-                    throw new Error("El pokemon con el id " + id + " no existe");
+                    throw new Error("El pokemon con el nombre " + nombre + " no existe");
                 }
                 return [2 /*return*/];
         }

@@ -40,7 +40,7 @@ exports.getPokemons = void 0;
 var pokemon_service_1 = require("../services/pokemon.service");
 var pokemonService = new pokemon_service_1.PokemonService();
 var getPokemons = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, pokemon1, pokemon2, pokemones, pokemon1types, pokemon2types, tipos1, tipos2;
+    var _a, pokemon1, pokemon2, pokemones, pokemon1types, pokemon2types, tipos1, tipos2, tiposPokemones, puntos;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
@@ -52,10 +52,10 @@ var getPokemons = function (req, res) { return __awaiter(void 0, void 0, void 0,
                 pokemon1types = [];
                 pokemon2types = [];
                 pokemones[0].types.forEach(function (tipo) {
-                    pokemon1types.push(tipo.type.url);
+                    pokemon1types.push(tipo.type.name);
                 });
                 pokemones[1].types.forEach(function (tipo) {
-                    pokemon2types.push(tipo.type.url);
+                    pokemon2types.push(tipo.type.name);
                 });
                 return [4 /*yield*/, pokemonService.getTypes(pokemon1types)];
             case 2:
@@ -63,13 +63,44 @@ var getPokemons = function (req, res) { return __awaiter(void 0, void 0, void 0,
                 return [4 /*yield*/, pokemonService.getTypes(pokemon2types)];
             case 3:
                 tipos2 = _b.sent();
-                console.log({
-                    tipos1: tipos1,
-                    tipos2: tipos2
+                tiposPokemones = [tipos1, tipos2];
+                puntos = [0, 0];
+                tiposPokemones[0].forEach(function (tipo) {
+                    if (tipo.damage_relations.double_damage_from.filter(function (ddf) { return pokemon2types.includes(ddf.name); }).length !== 0) {
+                        puntos[0] -= 70;
+                    }
+                    if (tipo.damage_relations.double_damage_to.filter(function (ddf) { return pokemon2types.includes(ddf.name); }).length !== 0) {
+                        puntos[0] += 70;
+                    }
+                    if (tipo.damage_relations.half_damage_from.filter(function (ddf) { return pokemon2types.includes(ddf.name); }).length !== 0) {
+                        puntos[0] -= 30;
+                    }
+                    if (tipo.damage_relations.half_damage_to.filter(function (ddf) { return pokemon2types.includes(ddf.name); }).length !== 0) {
+                        puntos[0] += 30;
+                    }
                 });
+                tiposPokemones[1].forEach(function (tipo) {
+                    if (tipo.damage_relations.double_damage_from.filter(function (ddf) { return pokemon1types.includes(ddf.name); }).length !== 0) {
+                        puntos[1] -= 70;
+                    }
+                    if (tipo.damage_relations.double_damage_to.filter(function (ddf) { return pokemon1types.includes(ddf.name); }).length !== 0) {
+                        puntos[1] += 70;
+                    }
+                    if (tipo.damage_relations.half_damage_from.filter(function (ddf) { return pokemon1types.includes(ddf.name); }).length !== 0) {
+                        puntos[1] -= 30;
+                    }
+                    if (tipo.damage_relations.half_damage_to.filter(function (ddf) { return pokemon1types.includes(ddf.name); }).length !== 0) {
+                        puntos[1] += 30;
+                    }
+                });
+                console.log(puntos);
                 // const tiposPokemones: TypePokemon[] = await pokemonService.getTypes(pokemones[0].id, pokemones[1].id);
                 res.status(200).json({
-                    ok: true
+                    ok: true,
+                    puntos: {
+                        pokemon1: puntos[0],
+                        pokemon2: puntos[1]
+                    }
                 });
                 return [2 /*return*/];
         }

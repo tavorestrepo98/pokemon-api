@@ -27,25 +27,69 @@ export const getPokemons = async (req: RequestParams, res: Response) => {
     const pokemon2types: string[] = []
 
     pokemones[0].types.forEach((tipo: Type) => {
-        pokemon1types.push(tipo.type.url);
+        pokemon1types.push(tipo.type.name);
     });
 
     pokemones[1].types.forEach((tipo: Type) => {
-        pokemon2types.push(tipo.type.url);
+        pokemon2types.push(tipo.type.name);
     });
 
     const tipos1: TypePokemon[] = await pokemonService.getTypes(pokemon1types);
     const tipos2: TypePokemon[] = await pokemonService.getTypes(pokemon2types);
 
-    console.log({
-        tipos1,
-        tipos2
-    });
+    const tiposPokemones: TypePokemon[][] = [tipos1, tipos2];
+
+    const puntos: number[] = [0, 0];
+
+    tiposPokemones[0].forEach(tipo => {
+        if(tipo.damage_relations.double_damage_from.filter(ddf => pokemon2types.includes(ddf.name)).length !== 0){
+            puntos[0] -= 70;
+        }
+
+        if(tipo.damage_relations.double_damage_to.filter(ddf => pokemon2types.includes(ddf.name)).length !== 0){
+            puntos[0] += 70;
+        }
+
+        if(tipo.damage_relations.half_damage_from.filter(ddf => pokemon2types.includes(ddf.name)).length !== 0){
+            puntos[0] -= 30;
+        }
+
+        if(tipo.damage_relations.half_damage_to.filter(ddf => pokemon2types.includes(ddf.name)).length !== 0){
+            puntos[0] += 30;
+        }
+
+    })
+
+    tiposPokemones[1].forEach(tipo => {
+    
+        if(tipo.damage_relations.double_damage_from.filter(ddf => pokemon1types.includes(ddf.name)).length !== 0){
+            puntos[1] -= 70;
+        }
+
+        if(tipo.damage_relations.double_damage_to.filter(ddf => pokemon1types.includes(ddf.name)).length !== 0){
+            puntos[1] += 70;
+        }
+
+        if(tipo.damage_relations.half_damage_from.filter(ddf => pokemon1types.includes(ddf.name)).length !== 0){
+            puntos[1] -= 30;
+        }
+
+        if(tipo.damage_relations.half_damage_to.filter(ddf => pokemon1types.includes(ddf.name)).length !== 0){
+            puntos[1] += 30;
+        }
+
+    })
+
+    console.log(puntos);
 
     // const tiposPokemones: TypePokemon[] = await pokemonService.getTypes(pokemones[0].id, pokemones[1].id);
 
     
     res.status(200).json({
-        ok: true
+        ok: true,
+        puntos: {
+            pokemon1: puntos[0],
+            pokemon2: puntos[1]
+        }
     });
 };
