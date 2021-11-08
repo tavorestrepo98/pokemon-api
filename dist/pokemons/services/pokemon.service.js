@@ -40,6 +40,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PokemonService = void 0;
+var axios_1 = __importDefault(require("axios"));
 var http_common_1 = __importDefault(require("../../config/http-common"));
 var PokemonService = /** @class */ (function () {
     function PokemonService() {
@@ -56,6 +57,25 @@ var PokemonService = /** @class */ (function () {
                     case 1:
                         resp = _a.sent();
                         return [2 /*return*/, [resp[0].data, resp[1].data]];
+                }
+            });
+        });
+    };
+    PokemonService.prototype.getTypes = function (urls) {
+        return __awaiter(this, void 0, void 0, function () {
+            var peticionesHttp, resp;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        peticionesHttp = urls.map(function (url) {
+                            return axios_1.default.get(url);
+                        });
+                        return [4 /*yield*/, Promise.all(peticionesHttp)];
+                    case 1:
+                        resp = _a.sent();
+                        return [2 /*return*/, resp.map(function (resp) {
+                                return resp.data;
+                            })];
                 }
             });
         });

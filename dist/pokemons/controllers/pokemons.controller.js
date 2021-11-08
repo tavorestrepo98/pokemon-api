@@ -40,7 +40,7 @@ exports.getPokemons = void 0;
 var pokemon_service_1 = require("../services/pokemon.service");
 var pokemonService = new pokemon_service_1.PokemonService();
 var getPokemons = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, pokemon1, pokemon2, respuesta;
+    var _a, pokemon1, pokemon2, pokemones, pokemon1types, pokemon2types, tipos1, tipos2;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
@@ -48,8 +48,29 @@ var getPokemons = function (req, res) { return __awaiter(void 0, void 0, void 0,
                 _a = req.query, pokemon1 = _a.pokemon1, pokemon2 = _a.pokemon2;
                 return [4 /*yield*/, pokemonService.getPokemon(pokemon1, pokemon2)];
             case 1:
-                respuesta = _b.sent();
-                res.json(respuesta);
+                pokemones = _b.sent();
+                pokemon1types = [];
+                pokemon2types = [];
+                pokemones[0].types.forEach(function (tipo) {
+                    pokemon1types.push(tipo.type.url);
+                });
+                pokemones[1].types.forEach(function (tipo) {
+                    pokemon2types.push(tipo.type.url);
+                });
+                return [4 /*yield*/, pokemonService.getTypes(pokemon1types)];
+            case 2:
+                tipos1 = _b.sent();
+                return [4 /*yield*/, pokemonService.getTypes(pokemon2types)];
+            case 3:
+                tipos2 = _b.sent();
+                console.log({
+                    tipos1: tipos1,
+                    tipos2: tipos2
+                });
+                // const tiposPokemones: TypePokemon[] = await pokemonService.getTypes(pokemones[0].id, pokemones[1].id);
+                res.status(200).json({
+                    ok: true
+                });
                 return [2 /*return*/];
         }
     });
